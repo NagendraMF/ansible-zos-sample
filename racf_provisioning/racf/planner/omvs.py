@@ -1,5 +1,4 @@
 from ..operations import EnsureOMVS
-from racf.planner.base import plan
 
 def plan(model):
 

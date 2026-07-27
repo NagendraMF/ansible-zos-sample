@@ -1,0 +1,23 @@
+content:
+  base:
+    group:
+      type: string
+      required: true
+
+    owner:
+      type: string
+
+    superior_group:
+      type: string
+
+    universal_access:
+      enum:
+        - none
+        - read
+        - update
+        - control
+        - alter
+
+  omvs:
+    gid:
+      type: integer

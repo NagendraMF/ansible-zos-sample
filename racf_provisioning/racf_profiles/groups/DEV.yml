@@ -1,0 +1,17 @@
+racf_group:
+  meta:
+    object_type: group
+    schema_version: "0.1.0"
+    zos_version: "3.1.0"
+
+  state: present
+
+  content:
+    base:
+      group: "DEV"
+      owner: "SYS1"
+      superior_group: "APPL"
+      universal_access: read
+
+    omvs:
+      gid: 1000

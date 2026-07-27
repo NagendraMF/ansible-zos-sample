@@ -1,36 +1,33 @@
+from pathlib import Path
+
 import yaml
+
+from .profile_registry import PROFILE_REGISTRY
 
 
 def load_yaml(filename):
-    with open(filename, "r", encoding="utf-8") as infile:
-        return yaml.safe_load(infile)
+
+    with Path(filename).open("r", encoding="utf-8") as f:
+        return yaml.safe_load(f)
 
 
 def extract_profile(document):
-    """
-    Extract the single RACF profile from a YAML document.
-
-    Expected format:
-
-        racf_user:
-            ...
-
-    Returns the inner object.
-    """
-
-    if not isinstance(document, dict):
-        raise ValueError("Profile document must contain a YAML mapping.")
 
     if len(document) != 1:
         raise ValueError(
-            "Profile document must contain exactly one top-level object."
+            "Expected exactly one RACF profile wrapper."
         )
 
-    wrapper_name, payload = next(iter(document.items()))
+    wrapper = next(iter(document))
 
-    if wrapper_name != "racf_user":
+    try:
+        schema, planner = PROFILE_REGISTRY[wrapper]
+    except KeyError:
         raise ValueError(
-            f"Unsupported profile type '{wrapper_name}'."
+            f"Unsupported profile type '{wrapper}'."
         )
 
-    return payload
+    return (
+        schema,
+        document[wrapper],
+    )

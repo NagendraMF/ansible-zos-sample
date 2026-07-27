@@ -4,7 +4,7 @@
   gather_facts: false
 
   vars:
-    profile: "{{ playbook_dir }}/../racf_profiles/users/"
+    profile: "{{ playbook_dir }}/../racf_profiles/"
 
   tasks:
 

@@ -1,0 +1,60 @@
+class SeparateCommandsStrategy:
+
+    def __init__(self):
+        self._commands = []
+
+    def adduser(self, userid):
+        self._commands.append(f"ADDUSER {userid}")
+
+    def segment(self, userid, name, body):
+
+        if not body:
+            return
+
+        self._commands.append(
+            f"ALTUSER {userid} {name}(" +
+            " ".join(body) +
+            ")"
+        )
+
+    def addgroup(self, group, body):
+        command = f"ADDGROUP {group}"
+
+        if body:
+            command += " " + " ".join(body)
+
+        self.commands.append(command)
+
+    def addgroup(
+        self,
+        group,
+        owner=None,
+        superior_group=None,
+        universal_access=None,
+    ):
+        command = f"ADDGROUP {group}"
+
+        if owner:
+            command += f" OWNER({owner})"
+
+        if superior_group:
+            command += f" SUPGROUP({superior_group})"
+
+        if universal_access:
+            command += f" UACC({universal_access.upper()})"
+
+        self.commands.append(command)
+
+    def group_segment(self, group, segment, body):
+        command = (
+            f"ALTGROUP {group} "
+            f"{segment}(" +
+            " ".join(body) +
+            ")"
+        )
+
+        self.commands.append(command)
+
+
+    def commands(self):
+        return self._commands

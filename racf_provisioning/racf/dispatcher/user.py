@@ -2,10 +2,8 @@ from racf.operations.user import EnsureUser
 from racf.operations.omvs import EnsureOMVS
 from racf.operations.tso import EnsureTSO
 
-
 def dispatch_user(op: EnsureUser, strategy):
     strategy.adduser(op.userid)
-
 
 def dispatch_omvs(op: EnsureOMVS, strategy):
 
@@ -20,7 +18,6 @@ def dispatch_omvs(op: EnsureOMVS, strategy):
         "OMVS",
         body,
     )
-
 
 def dispatch_tso(op: EnsureTSO, strategy):
 

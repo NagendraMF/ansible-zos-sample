@@ -1,7 +1,6 @@
 from . import base
 from . import omvs
 from . import tso
-from .common import Plan
 
 
 def plan(model):
@@ -17,9 +16,7 @@ def plan(model):
     )
 
     operations.extend(
-    tso.plan(model)
+        tso.plan(model)
     )
 
-    return Plan(
-        operations=operations,
-    )
+    return operations

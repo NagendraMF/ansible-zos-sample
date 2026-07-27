@@ -26,7 +26,6 @@ racf_user:
       account_number: ACCT01
       procedure: PROC01    
 """)
-
     commands = generate_commands_from_file(str(filename))
 
     assert commands == [
@@ -58,8 +57,7 @@ racf_user:
       account_number: ACCT01
       procedure: PROC01    
 """)
-
     with pytest.raises(ValueError) as excinfo:
-        generate_commands(str(filename))
+        generate_commands_from_file(str(filename))
 
     assert "must be an object" in str(excinfo.value)

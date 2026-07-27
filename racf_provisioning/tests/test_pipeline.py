@@ -19,7 +19,10 @@ def test_user_present_pipeline():
         },
     }
 
-    commands = generate_commands(model)
+    commands = generate_commands(
+        model,
+        USER_SCHEMA,
+    )
 
     assert commands == [
         "ADDUSER USER01",
@@ -47,7 +50,10 @@ def test_user_with_omvs_present_pipeline():
         },
     }
 
-    commands = generate_commands(model)
+    commands = generate_commands(
+        model,
+        USER_SCHEMA,
+    )
 
     assert commands == [
         "ADDUSER USER01",
@@ -80,7 +86,10 @@ def test_user_profile_end_to_end():
         },
     }
 
-    commands = generate_commands(model)
+    commands = generate_commands(
+        model,
+        USER_SCHEMA,
+    )
 
     assert commands == [
         "ADDUSER USER01",
