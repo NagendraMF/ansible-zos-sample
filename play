@@ -11,4 +11,4 @@
 [ "$#" -lt 1 ] && { echo "Usage: $0 playbookname [args]"; exit 1; }
 _playbook="$1"
 shift
-ansible-playbook playbooks/"${_playbook}".yml "$@"		
+ansible-playbook -i inventory playbooks/"${_playbook}".yml "$@"		
