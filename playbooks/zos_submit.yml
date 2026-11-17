@@ -1,0 +1,14 @@
+---
+- name: Submit Job from JCL
+  hosts: zos
+  collections: 
+     - ibm.ibm_zos_core
+  gather_facts: false
+  environment: "{{ environment_vars }}"   
+
+  tasks:
+    - name: Submit job
+      zos_job_submit:
+        src: GAMA02.LAB.JCL(LAB7)
+      register: response
+ 

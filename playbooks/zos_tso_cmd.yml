@@ -1,0 +1,19 @@
+---
+- name: AAlloc using TSO command 
+  hosts: zos
+  gather_facts: no
+  collections:
+    - ibm.ibm_zos_core
+  environment: "{{ environment_vars }}"
+
+  tasks:
+    - name: Alloc datasets using TSO cmd
+      zos_tso_command:
+        commands:
+          - delete 'GAMA02.TSO.ALLOC1'
+          - delete 'GAMA02.TSO.ALLOC2'
+          - ALLOC da('GAMA02.TSO.ALLOC1') NEW CAT RECFM(F B) lrec(80) BLKSIZE(16000) SPACE(1,1) CYL
+          - ALLOC da('GAMA02.TSO.ALLOC2') NEW CAT RECFM(F B) lrec(80) BLKSIZE(16000) SPACE(1,1) CYL
+          
+
+      

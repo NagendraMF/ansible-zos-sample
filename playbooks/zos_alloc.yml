@@ -1,0 +1,14 @@
+---
+- name: Ping z/OS node
+  hosts: zos
+  gather_facts: false
+  environment: "{{ environment_vars }}"
+
+  tasks:
+    - name: Alloc dsn
+      ibm.ibm_zos_core.zos_data_set:
+        name: GAMA02.TEST
+        type: seq
+        space_type: trk
+        record_format: fb
+        record_length: 80

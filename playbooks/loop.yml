@@ -1,0 +1,35 @@
+---
+- name: Test the lop
+  hosts: zos
+  gather_facts: no
+  collections:
+    - ibm.ibm_zos_core
+  environment: "{{ environment_vars }}"
+
+  vars: 
+    data_sets:
+      - filename: GAMA02.LOOP.DSN1
+        primary_allocation: 2
+        secondary_allocation: 1
+
+      - filename: GAMA02.LOOP.DSN2
+        primary_allocation: 3
+        secondary_allocation: 4
+        
+  tasks: 
+    - name: Alloc datasets
+      zos_data_set:
+        name: "{{ item.filename }}"
+        type: seq
+        space_primary: "{{ item.primary_allocation }}" 
+        space_secondary: "{{ item.secondary_allocation }}"
+        space_type: trk
+        record_format: fb
+        record_length: 80
+        block_size: 800
+        state: present
+ 
+      loop: "{{ data_sets }}" 
+     # loop_control: 
+     #  label: "{{ item.filename }}"
+         
