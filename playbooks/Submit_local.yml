@@ -1,0 +1,15 @@
+---
+- name: Submit Job from LOCAL dir
+  hosts: zos
+  collections: 
+     - ibm.ibm_zos_core
+  gather_facts: false
+  environment: "{{ environment_vars }}"   
+
+  tasks:
+     - name: Submit a JCL file from the Ansible control node local
+       zos_job_submit:
+         src: /home/ansible/ansible-zos-sample/jcl/crePDSE.jcl
+         remote_src: false
+       register: job_result
+
