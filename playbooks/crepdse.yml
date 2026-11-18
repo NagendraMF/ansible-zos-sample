@@ -10,37 +10,37 @@
     hlq: GAMA02 
     mlq: TST
     data_sets:
-      - filename: "{{ hlq }}"."{{ mlq }}".ASM
+      - filename: "{{ hlq }}.{{ mlq }}.ASM"
         primary_alloc: 2
         secondary_alloc: 1
         dir: 10
 
-      - filename: GAMA02."{{ hlq }}"."{{ mlq }}".COPYBOOK
+      - filename: "{{ hlq }}.{{ mlq }}.COPYBOOK"
         primary_alloc: 3
         secondary_alloc: 4
         dir: 12
 
-      - filename: "{{ hlq }}"."{{ mlq }}".COPYLIB
+      - filename: "{{ hlq }}.{{ mlq }}.COPYLIB"
         primary_alloc: 2
         secondary_alloc: 1
         dir: 15
 
-      - filename: "{{ hlq }}"."{{ mlq }}".JCL 
+      - filename: "{{ hlq }}.{{ mlq }}.JCL"
         primary_alloc: 3
         secondary_alloc: 4
         dir: 20
 
-      - filename: "{{ hlq }}"."{{ mlq }}".COPYLIB
+      - filename: "{{ hlq }}.{{ mlq }}.COPYLIB"
         primary_alloc: 2
         secondary_alloc: 1
         dir: 10
 
-      - filename: "{{ hlq }}"."{{ mlq }}".SOURCE
+      - filename: "{{ hlq }}.{{ mlq }}.SOURCE"
         primary_alloc: 3
         secondary_alloc: 4
         dir: 10
 
-      - filename: "{{ hlq }}"."{{ mlq }}".MACLIB
+      - filename: "{{ hlq }}.{{ mlq }}.MACLIB"
         primary_alloc: 2
         secondary_alloc: 1
         dir: 10
