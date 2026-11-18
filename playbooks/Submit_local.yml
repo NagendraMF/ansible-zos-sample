@@ -10,6 +10,7 @@
      - name: Submit a JCL file from the Ansible control node local
        zos_job_submit:
          src: /home/ansible/ansible-zos-sample/jcl/crePDSE.jcl
-         remote_src: false
+         location: LOCAL
+         wait_time_s: 20
        register: job_result
 
