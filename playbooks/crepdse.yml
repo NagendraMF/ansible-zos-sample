@@ -1,0 +1,66 @@
+---
+- name: Test the lop
+  hosts: zos
+  gather_facts: no
+  collections:
+    - ibm.ibm_zos_core
+  environment: "{{ environment_vars }}"
+
+  vars: 
+    hlq: GAMA02 
+    mlq: TST
+    data_sets:
+      - filename: "{{ hlq }}"."{{ mlq }}".ASM
+        primary_alloc: 2
+        secondary_alloc: 1
+        dir: 10
+
+      - filename: GAMA02."{{ hlq }}"."{{ mlq }}".COPYBOOK
+        primary_alloc: 3
+        secondary_alloc: 4
+        dir: 12
+
+      - filename: "{{ hlq }}"."{{ mlq }}".COPYLIB
+        primary_alloc: 2
+        secondary_alloc: 1
+        dir: 15
+
+      - filename: "{{ hlq }}"."{{ mlq }}".JCL 
+        primary_alloc: 3
+        secondary_alloc: 4
+        dir: 20
+
+      - filename: "{{ hlq }}"."{{ mlq }}".COPYLIB
+        primary_alloc: 2
+        secondary_alloc: 1
+        dir: 10
+
+      - filename: "{{ hlq }}"."{{ mlq }}".SOURCE
+        primary_alloc: 3
+        secondary_alloc: 4
+        dir: 10
+
+      - filename: "{{ hlq }}"."{{ mlq }}".MACLIB
+        primary_alloc: 2
+        secondary_alloc: 1
+        dir: 10
+
+        
+  tasks: 
+    - name: Alloc datasets
+      zos_data_set:
+        name: "{{ item.filename }}"
+        type: library
+        space_primary: "{{ item.primary_allocation }}" 
+        space_secondary: "{{ item.secondary_allocation }}"
+        space_type: trk
+        directory_blocks: "{{ item.dir }}"
+        record_format: fb
+        record_length: 80
+        block_size: 800
+        state: present
+ 
+      loop: "{{ data_sets }}" 
+      loop_control: 
+        label: "{{ item.filename }}"
+         
