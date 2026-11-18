@@ -51,8 +51,8 @@
       zos_data_set:
         name: "{{ item.filename }}"
         type: library
-        space_primary: "{{ item.primary_allocation }}" 
-        space_secondary: "{{ item.secondary_allocation }}"
+        space_primary: "{{ item.primary_alloc }}" 
+        space_secondary: "{{ item.secondary_alloc }}"
         space_type: trk
         directory_blocks: "{{ item.dir }}"
         record_format: fb
