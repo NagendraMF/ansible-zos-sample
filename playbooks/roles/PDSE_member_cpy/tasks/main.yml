@@ -1,0 +1,16 @@
+- name: Alloc dsn
+  ibm.ibm_zos_core.zos_data_set:
+    name: "{{ dsname }}"
+    type: library
+    space_type: trk
+    record_format: fb
+    record_length: 80
+    block_size: 800
+    directory_blocks: 10
+    state: present
+
+- name: Copy content
+  ibm.ibm_zos_core.zos_copy:
+    content: "{{ members.data }}"
+    dest: "{{ dsname | upper }}({{ members.mem | upper }})"
+    force: true        

@@ -17,7 +17,7 @@
 - name: Set temporary JCL paths
   ansible.builtin.set_fact:
     jcl_path: "{{ playbook_dir }}/tmp_jcl/rendered.jcl"
-    jcl_dataset_name: "{{ job_owner }}.TEMP.JCL"
+    jcl_dataset_name: "{{ job_owner }}.TEMP02.JCL"
 
 - name: Render JCL on the control node
   ansible.builtin.template:
@@ -41,13 +41,39 @@
     space_primary: 5
     space_secondary: 1
     space_type: trk
+   
+- name: Wait 5 seconds before proceeding
+  ansible.builtin.pause:
+    seconds: 5
+
+- name: Check rendered file at my_variables path for non-ASCII characters
+  ansible.builtin.command:
+    argv:
+      - grep
+      - -P
+      - -n
+      - '[^\x00-\x7F]'
+      - "{{ jcl_path }}"
+  delegate_to: localhost
+  register: non_ascii_check
+  failed_when: non_ascii_check.rc == 2
+
+- name: Show offending non-ASCII lines
+  ansible.builtin.debug:
+    var: non_ascii_check.stdout_lines
+  when: non_ascii_check.rc == 0
 
 - name: Copy rendered JCL to temporary dataset
   ibm.ibm_zos_core.zos_copy:
     src: "{{ jcl_path }}"
     dest: "{{ jcl_dataset_name }}"
     remote_src: false
-
+    encoding:
+      from: UTF-8
+      to: IBM-1047
+  environment:
+    remote_tmp: /tmp/nag 
+    
 - name: Submit JCL
   ibm.ibm_zos_core.zos_job_submit:
     src: "{{ jcl_dataset_name }}"

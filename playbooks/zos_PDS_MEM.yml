@@ -1,0 +1,37 @@
+---
+- name: Copy members  z/OS node
+  hosts: zos
+  gather_facts: false
+  environment: "{{ environment_vars }}"
+
+  vars:
+    hlq: GAMA02
+    dsname: "{{ hlq }}.PDS.MEM"
+    member:
+      - mem: sample
+        data: "this is a sample member" 
+
+      - mem: ##temp
+        data: "This is a temp member for lab28
+               second line test "
+
+  tasks:
+    - name: Alloc dsn
+      ibm.ibm_zos_core.zos_data_set:
+        name: "{{ dsname }}"
+        type: library 
+        space_type: trk
+        record_format: fb
+        record_length: 80
+        block_size: 800
+        directory_blocks: 10
+        state: present
+
+    - name: Copy content for mem 
+      ibm.ibm_zos_core.zos_copy:
+        content: "{{ item.data }}"
+        dest: "{{ dsname }}({{ item.mem }})"
+
+      loop: "{{ member }}"
+   
+

@@ -1,0 +1,28 @@
+---
+- name: Copy members  z/OS node
+  hosts: zos
+  gather_facts: false
+  environment: "{{ environment_vars }}"
+
+  vars:
+    hlq: GAMA02
+    dsname: "{{ hlq }}.PDS.MEM"
+    member:
+      - mem: sample
+        data: "this is a sample member"
+
+      - mem: ##temp
+        data: "This is a temp member for lab28
+               second line test "
+
+  tasks:
+    - name: call role 
+      ansible.builtin.include_role:
+        name: PDSE_member_cpy
+      vars: 
+        members: "{{ item }}"   
+
+      loop: "{{ member }}"
+
+
+
