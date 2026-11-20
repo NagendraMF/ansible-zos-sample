@@ -1,0 +1,78 @@
+---
+- name: Issue RACF commands using zos tso command
+  hosts: zos
+  gather_facts: false
+  collections:
+    - ibm.ibm_zos_core
+  environment: "{{ environment_vars }}"   
+
+ #vars:
+ #  id: "{{ userid | upper }}"
+  
+  tasks:
+    - name: Check user id variable is used
+      ansible.builtin.assert: 
+        that: 
+          - userid is defined      
+          - userid | length > 0 
+          - userid | length <= 8
+          - userid | string is match('^[A-Za-z][A-Za-z0-9]{0,7}$') 
+  
+        fail_msg: "id should be defined as userid=xxxx and should be less than or equal to 8 chars while invoking the playbook or add extra variable in AAP template ."
+        success_msg: "user id resoleved as {{ userid }} and the variable is valid."
+  
+
+    - name: TSO command to List user
+      ibm.ibm_zos_core.zos_tso_command:
+        commands: "LU {{ userid | upper }}"
+      register: result_lu
+      ignore_errors: true
+
+    - name: debug the list user msg
+      debug: 
+        var: result_lu.output[0].content
+
+    - name: Issue DELUSER to redeine
+      zos_tso_command:
+        commands: "DELUSER {{ userid }}"
+      when: 	
+        - "'USER=DUSR' in ( result_lu.output[0].content | join(' ') )"
+        - userid in ["DUSR21","DUSR22"]  
+      register: result_du
+      ignore_errors: true
+
+    - name: debug the Deluser msg
+      debug:
+        var: result_du.output[0].content
+      when: result_du is not skipped
+ 
+    - name: Listuser after del 
+      ibm.ibm_zos_core.zos_tso_command:
+        commands: "LU {{ userid | upper }}"
+      when: 
+        - result_du is not skipped
+        - (result_du.output[0].content | join('') | trim) == ''   
+        - "'USER=DUSR' in ( result_lu.output[0].content | join(' ') )"
+ 
+      register: result_lu2
+      ignore_errors: true
+
+    - name: debug the list user msg
+      debug:
+        var: result_lu2.output[0].content
+      when: result_lu2 is not skipped
+
+    - name: Issue ADDUSER if no user found
+      zos_tso_command: 
+        commands: "ADDUSER {{ userid }} DFLTGRP(DEVGRP) PASSWORD(INITPASS) TSO(ACCTNUM(ACCT00) SIZE(2066128) PROC(DB13PROC) COMMAND(ISPF)) OMVS(AUTOUID HOME('/u/dusr01') PROGRAM('/bin/sh')) " 
+      when: >
+        ('ICH30001I' in ( result_lu.output[0].content | join(' ') )) or
+        (result_lu2 is not skipped and 'ICH30001I' in ( result_lu2.output[0].content | join(' ') )) 
+      register: results
+      ignore_errors: true
+ 
+    - name: debug the Adduser msg
+      debug:
+        var: results.output[0].content
+ 
+      
